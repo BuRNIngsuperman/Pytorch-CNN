@@ -19,6 +19,7 @@ I'm playing with [PyTorch](http://pytorch.org/) on the CIFAR10 dataset.
 | [DenseNet121](https://arxiv.org/abs/1608.06993)       | 95.04%      |
 | [PreActResNet18](https://arxiv.org/abs/1603.05027)    | 95.11%      |
 | [DPN92](https://arxiv.org/abs/1707.01629)             | 95.16%      |
+| [Alexnet](https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf)                                           | NULL        |
 
 
 Resume the training on the terminal with `python main.py --resume --lr=0.01 --epochs=200`
