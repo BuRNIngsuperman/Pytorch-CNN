@@ -7,6 +7,7 @@ import torch.backends.cudnn as cudnn
 
 import torchvision
 import torchvision.transforms as transforms
+from torch.optim import lr_scheduler
 
 import os
 import argparse
@@ -15,7 +16,7 @@ from models import *
 from utils import progress_bar
 
 parser = argparse.ArgumentParser(description='PyTorch CIFAR10 Training')
-parser.add_argument('--lr', default=0.1, type=float, help='learning rate')
+parser.add_argument('--lr', default=0.01, type=float, help='learning rate')
 parser.add_argument('--resume', '-r', action='store_true', default=False, help='resume from checkpoint')
 parser.add_argument('--epochs', '-e', type=int, default=200, help='epochs of train(defalut=500)')
 args = parser.parse_args()
@@ -82,11 +83,11 @@ if args.resume:
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=5e-4)
-
+scheduler = lr_scheduler.StepLR(optimizer, step_size=60, gamma=0.1)
 
 # Training
 def train(epoch):
-    print('\nEpoch: %d' % epoch)
+    print('\nEpoch: %d' % (epoch+1))
     global best_train_acc
     net.train()
     train_loss = 0
@@ -107,6 +108,9 @@ def train(epoch):
 
         # progress_bar(batch_idx, len(trainloader), 'Loss: %.3f | Acc: %.3f%% (%d/%d)'
         #     % (train_loss/(batch_idx+1), 100.*correct/total, correct, total))
+
+    # 读取optimizer中state_dict()字典中的学习率
+    print("lr:", optimizer.state_dict()['param_groups'][0]['lr'])
     print('train_Loss: %.3f | train_Acc: %.3f%% (%d/%d)' % (
         train_loss / (batch_idx + 1), 100. * correct / total, correct, total))
     train_acc = 100. * correct / total
@@ -139,7 +143,7 @@ def test(epoch):
     # Save checkpoint.
     test_acc = 100. * correct / total
     if test_acc > best_test_acc:
-        print('Saving..')
+        print('Saving the model..')
         state = {
             'net': net.state_dict(),
             'acc': test_acc,
@@ -152,6 +156,7 @@ def test(epoch):
 
 
 for epoch in range(start_epoch, args.epochs):
+    scheduler.step()
     train(epoch)
     test(epoch)
 print("--------Ending training----------")

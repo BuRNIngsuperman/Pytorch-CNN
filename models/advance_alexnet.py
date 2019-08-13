@@ -1,9 +1,8 @@
 import torch
 import torch.nn as nn
 
-
 class Alexnet_ad(nn.Module):
-
+    """Advanced pytorch Alexnet for CIFAR10"""
     def __init__(self, num_classes=1000):
         super(Alexnet_ad, self).__init__()
         self.features = nn.Sequential(

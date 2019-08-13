@@ -12,7 +12,6 @@ class Alexnet(nn.Module):
         Args:
              num_classes(int) : the number of output classes
         """
-
         super(Alexnet, self).__init__()
         self.features = nn.Sequential(
             # [n,3,224,224]
