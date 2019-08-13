@@ -53,7 +53,7 @@ classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship'
 # Model
 print('==> Building model..')
 # net = VGG('VGG19')
-# net = ResNet18()
+net = ResNet18()
 # net = PreActResNet18()
 # net = GoogLeNet()
 # net = DenseNet121()
@@ -66,7 +66,7 @@ print('==> Building model..')
 # net = ShuffleNetV2(1)
 # net = Alexnet(num_classes=10)
 # net = EfficientNetB0()
-net = Alexnet_ad(num_classes=10)
+# net = Alexnet_ad(num_classes=10)
 net = net.to(device)
 if device == 'cuda':
     net = torch.nn.DataParallel(net)
@@ -83,11 +83,14 @@ if args.resume:
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=5e-4)
+
+# learning rate decay
 scheduler = lr_scheduler.StepLR(optimizer, step_size=60, gamma=0.1)
+
 
 # Training
 def train(epoch):
-    print('\nEpoch: %d' % (epoch+1))
+    print('\nEpoch: %d' % (epoch + 1))
     global best_train_acc
     net.train()
     train_loss = 0
@@ -118,6 +121,7 @@ def train(epoch):
         best_train_acc = train_acc
 
 
+# test
 def test(epoch):
     global best_test_acc
     net.eval()
@@ -160,4 +164,4 @@ for epoch in range(start_epoch, args.epochs):
     train(epoch)
     test(epoch)
 print("--------Ending training----------")
-print(" best train acc:%.3f %%,best test acc:%.3f%% " %(best_train_acc, best_test_acc))
+print(" best train acc:%.3f %%,best test acc:%.3f%% " % (best_train_acc, best_test_acc))
