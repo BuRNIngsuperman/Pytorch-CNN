@@ -23,4 +23,5 @@ I'm playing with [PyTorch](http://pytorch.org/) on the CIFAR10 dataset.
 
 
 Resume the training on the terminal with `python main.py --resume=True --lr=0.01 --epochs=200`
+
 you can  try running this programe on the terminal
